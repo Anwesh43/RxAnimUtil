@@ -54,6 +54,98 @@ public class RxAnimUtil {
             }
         });
     }
+    public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
+        switch (rxAnimTranslation) {
+            case X:
+                view.setTranslationX(from);
+                break;
+            case Y:
+                view.setTranslationY(from);
+                break;
+            case XY:
+                view.setTranslationX(from);
+                view.setTranslationY(from);
+                break;
+            default:
+                break;
+        }
+        final int dir = (to!=from)?(to-from)/Math.abs(to-from):0;
+        animateView(timeInMilliSeconds, new RxAnimationListener() {
+            @Override
+            public void animate() {
+
+                switch (rxAnimTranslation) {
+                    case X:
+                        view.setTranslationX(view.getTranslationX()+dir*RxAnimConstants.TRANS_SPEED);
+                        break;
+                    case Y:
+                        view.setTranslationY(view.getTranslationY()+dir*RxAnimConstants.TRANS_SPEED);
+                        break;
+                    case XY:
+                        view.setTranslationX(view.getTranslationX()+dir*RxAnimConstants.TRANS_SPEED);
+                        view.setTranslationY(view.getTranslationY()+dir*RxAnimConstants.TRANS_SPEED);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            @Override
+            public boolean checkStopCondition() {
+                boolean condition = false;
+                switch(rxAnimTranslation) {
+                    case X:
+                        if(from>to) {
+                            condition = view.getTranslationX()<=to;
+                            view.setTranslationX(to);
+                        }
+                        else {
+                            condition = view.getTranslationX()>=to;
+                            view.setTranslationX(to);
+                        }
+                        break;
+                    case Y:
+                        if(from>to) {
+                            condition = view.getTranslationY()<=to;
+                            if(condition) {
+                                view.setTranslationY(to);
+                            }
+                        }
+                        else {
+                            condition = view.getTranslationY()>=to;
+                            if(condition) {
+                                view.setTranslationY(to);
+                            }
+                        }
+                        break;
+                    case XY:
+                        if(from>to) {
+                            condition = view.getTranslationY()<=to && view.getTranslationX()<=to;
+                            if(condition) {
+                                view.setTranslationX(to);
+                                view.setTranslationY(to);
+                            }
+                        }
+                        else if(from < to){
+                            condition = view.getTranslationX()>=to && view.getTranslationY()>=to;
+                            if(condition) {
+                                view.setTranslationX(to);
+                                view.setTranslationY(to);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return condition;
+            }
+        });
+    }
+    public enum RxAnimTranslation {
+        Y,X,XY;
+    }
     private interface RxAnimationListener {
         void animate();
         boolean checkStopCondition();

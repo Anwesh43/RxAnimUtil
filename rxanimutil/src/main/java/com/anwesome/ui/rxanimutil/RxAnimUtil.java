@@ -54,6 +54,37 @@ public class RxAnimUtil {
             }
         });
     }
+    public static void scaleView(final View view,float from,final float to,int timeInMilliSeconds){
+        view.setScaleX(from);
+        view.setScaleY(from);
+        final float dir = from!=to?(to-from)/Math.abs(to-from):0;
+        animateView(timeInMilliSeconds, new RxAnimationListener() {
+            @Override
+            public void animate() {
+                view.setScaleX(view.getScaleX()+dir*RxAnimConstants.SCALE_SPEED);
+                view.setScaleY(view.getScaleY()+dir*RxAnimConstants.SCALE_SPEED);
+            }
+
+            @Override
+            public boolean checkStopCondition() {
+                if(dir>0) {
+                    if(view.getScaleX()>=to && view.getScaleY()>=to) {
+                        view.setScaleX(to);
+                        view.setScaleY(to);
+                        return true;
+                    }
+                }
+                else {
+                    if(view.getScaleX()<=to && view.getScaleY()<=to){
+                        view.setScaleX(to);
+                        view.setScaleY(to);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
     public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
         switch (rxAnimTranslation) {
             case X:

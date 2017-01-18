@@ -6,4 +6,5 @@ package com.anwesome.ui.rxanimutil;
 public class RxAnimConstants {
     public static final Integer ROT_SPEED = 10;
     public static final Integer TRANS_SPEED = 20;
+    public static final float SCALE_SPEED = 0.1f;
 }

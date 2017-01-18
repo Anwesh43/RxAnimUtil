@@ -13,7 +13,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ImageView imageView = (ImageView)findViewById(R.id.im_view);
+        ImageView imageView2= (ImageView)findViewById(R.id.im_view2);
         RxAnimUtil.rotateView(imageView,40,270,100);
+        RxAnimUtil.translateView(imageView2,300,700, RxAnimUtil.RxAnimTranslation.XY,100);
     }
     public void onPause() {
         super.onPause();

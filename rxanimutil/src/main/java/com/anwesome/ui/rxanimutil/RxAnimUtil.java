@@ -85,7 +85,7 @@ public class RxAnimUtil {
             }
         });
     }
-    private static void fadeInOrOutView(final View view,int timeInMilliSeconds,final int dir,final int start,final int end) {
+    private static void fadeInOrOutView(final View view,int timeInMilliSeconds,final int dir,final float start,final float end) {
         view.setAlpha(start);
         animateView(timeInMilliSeconds, new RxAnimationListener() {
             @Override

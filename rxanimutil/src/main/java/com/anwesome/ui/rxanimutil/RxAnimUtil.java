@@ -110,6 +110,9 @@ public class RxAnimUtil {
     public static void fadeInView(final View view,int timeInMilliSeconds) {
         fadeInOrOutView(view,timeInMilliSeconds,1,RxAnimConstants.MIN_ALPHA,RxAnimConstants.MAX_ALPHA);
     }
+    public static void fadeOutView(final View view,int timeInMilliSeconds) {
+        fadeInOrOutView(view,timeInMilliSeconds,-1,RxAnimConstants.MAX_ALPHA,RxAnimConstants.MIN_ALPHA);
+    }
     public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
         switch (rxAnimTranslation) {
             case X:

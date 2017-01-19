@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         RxAnimUtil.rotateView(imageView,40,270,100);
         RxAnimUtil.translateView(imageView2,300,700, RxAnimUtil.RxAnimTranslation.XY,100);
         RxAnimUtil.scaleView(imageView3,0.2f,1.5f,100);
-        RxAnimUtil.fadeInView(imageView4,100);
+        RxAnimUtil.fadeInView(imageView4,300);
     }
     public void onPause() {
         super.onPause();

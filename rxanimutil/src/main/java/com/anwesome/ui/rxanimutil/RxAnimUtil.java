@@ -5,9 +5,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -24,7 +22,7 @@ public class RxAnimUtil {
             }
         }
     }
-    private static void animateView(int timeInMilliSeconds, final RxAnimationListener animationListener) {
+    private static void animateView(int timeInMilliSeconds, final RxAnimationRunner animationListener,RxAnimationListener rxAnimationListener) {
        final int currentIndex = subscriptions.size();
        subscriptions.add(Observable.interval(timeInMilliSeconds, TimeUnit.MILLISECONDS).subscribeOn(AndroidSchedulers.mainThread()).observeOn(Schedulers.newThread()).subscribe(new Action1<Long>() {
            @Override
@@ -39,9 +37,9 @@ public class RxAnimUtil {
            }
        }));
     }
-    public static void rotateView(final View view,final int from,final int to,int timeInMilliSeconds){
+    public static void rotateView(final View view,final int from,final int to,int timeInMilliSeconds,RxAnimationListener rxAnimationListener){
         view.setRotation(from);
-        animateView(timeInMilliSeconds,new RxAnimationListener(){
+        animateView(timeInMilliSeconds,new RxAnimationRunner(){
            public void animate() {
                view.setRotation(view.getRotation()+RxAnimConstants.ROT_SPEED);
            }
@@ -52,13 +50,13 @@ public class RxAnimUtil {
                 }
                 return condition;
             }
-        });
+        },rxAnimationListener);
     }
-    public static void scaleView(final View view,float from,final float to,int timeInMilliSeconds){
+    public static void scaleView(final View view,float from,final float to,int timeInMilliSeconds,RxAnimationListener rxAnimationListener){
         view.setScaleX(from);
         view.setScaleY(from);
         final float dir = from!=to?(to-from)/Math.abs(to-from):0;
-        animateView(timeInMilliSeconds, new RxAnimationListener() {
+        animateView(timeInMilliSeconds, new RxAnimationRunner() {
             @Override
             public void animate() {
                 view.setScaleX(view.getScaleX()+dir*RxAnimConstants.SCALE_SPEED);
@@ -83,11 +81,11 @@ public class RxAnimUtil {
                 }
                 return false;
             }
-        });
+        },rxAnimationListener);
     }
-    private static void fadeInOrOutView(final View view,int timeInMilliSeconds,final int dir,final float start,final float end) {
+    private static void fadeInOrOutView(final View view,int timeInMilliSeconds,final int dir,final float start,final float end,RxAnimationListener rxAnimationListener) {
         view.setAlpha(start);
-        animateView(timeInMilliSeconds, new RxAnimationListener() {
+        animateView(timeInMilliSeconds, new RxAnimationRunner() {
             @Override
             public void animate() {
                 view.setAlpha(view.getAlpha()+dir*RxAnimConstants.ALPHA_SPEED);
@@ -105,15 +103,15 @@ public class RxAnimUtil {
                 }
                 return false;
             }
-        });
+        },rxAnimationListener);
     }
-    public static void fadeInView(final View view,int timeInMilliSeconds) {
-        fadeInOrOutView(view,timeInMilliSeconds,1,RxAnimConstants.MIN_ALPHA,RxAnimConstants.MAX_ALPHA);
+    public static void fadeInView(final View view,int timeInMilliSeconds,RxAnimationListener rxAnimationListener) {
+        fadeInOrOutView(view,timeInMilliSeconds,1,RxAnimConstants.MIN_ALPHA,RxAnimConstants.MAX_ALPHA,rxAnimationListener);
     }
-    public static void fadeOutView(final View view,int timeInMilliSeconds) {
-        fadeInOrOutView(view,timeInMilliSeconds,-1,RxAnimConstants.MAX_ALPHA,RxAnimConstants.MIN_ALPHA);
+    public static void fadeOutView(final View view,int timeInMilliSeconds,RxAnimationListener rxAnimationListener) {
+        fadeInOrOutView(view,timeInMilliSeconds,-1,RxAnimConstants.MAX_ALPHA,RxAnimConstants.MIN_ALPHA,rxAnimationListener);
     }
-    public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
+    public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds,final RxAnimationListener rxAnimationListener) {
         switch (rxAnimTranslation) {
             case X:
                 view.setTranslationX(from);
@@ -129,7 +127,7 @@ public class RxAnimUtil {
                 break;
         }
         final int dir = (to!=from)?(to-from)/Math.abs(to-from):0;
-        animateView(timeInMilliSeconds, new RxAnimationListener() {
+        animateView(timeInMilliSeconds, new RxAnimationRunner() {
             @Override
             public void animate() {
 
@@ -200,13 +198,18 @@ public class RxAnimUtil {
 
                 return condition;
             }
-        });
+        },rxAnimationListener);
     }
     public enum RxAnimTranslation {
         Y,X,XY;
     }
-    private interface RxAnimationListener {
+    private interface RxAnimationRunner {
         void animate();
         boolean checkStopCondition();
+    }
+    public interface RxAnimationListener{
+        void onAnimationEnd();
+        void onAnimationRunning();
+        void onAnimationStart();
     }
 }

@@ -85,6 +85,28 @@ public class RxAnimUtil {
             }
         });
     }
+    private static void fadeInOrOutView(final View view,int timeInMilliSeconds,final int dir,final int start,final int end) {
+        view.setAlpha(start);
+        animateView(timeInMilliSeconds, new RxAnimationListener() {
+            @Override
+            public void animate() {
+                view.setAlpha(view.getAlpha()+RxAnimConstants.ALPHA_SPEED);
+            }
+
+            @Override
+            public boolean checkStopCondition() {
+                if(dir == 1 && view.getAlpha()>=end){
+                    view.setAlpha(end);
+                    return true;
+                }
+                else if(dir == -1 && view.getAlpha()<=end) {
+                    view.setAlpha(end);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
     public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
         switch (rxAnimTranslation) {
             case X:

@@ -90,7 +90,7 @@ public class RxAnimUtil {
         animateView(timeInMilliSeconds, new RxAnimationListener() {
             @Override
             public void animate() {
-                view.setAlpha(view.getAlpha()+RxAnimConstants.ALPHA_SPEED);
+                view.setAlpha(view.getAlpha()+dir*RxAnimConstants.ALPHA_SPEED);
             }
 
             @Override
@@ -106,6 +106,9 @@ public class RxAnimUtil {
                 return false;
             }
         });
+    }
+    public static void fadeInView(final View view,int timeInMilliSeconds) {
+        fadeInOrOutView(view,timeInMilliSeconds,1,RxAnimConstants.MIN_ALPHA,RxAnimConstants.MAX_ALPHA);
     }
     public static void translateView(final View view, final int from, final int to, final RxAnimTranslation rxAnimTranslation, int timeInMilliSeconds) {
         switch (rxAnimTranslation) {

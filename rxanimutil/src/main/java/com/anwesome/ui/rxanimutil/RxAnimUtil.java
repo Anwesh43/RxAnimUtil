@@ -22,16 +22,25 @@ public class RxAnimUtil {
             }
         }
     }
-    private static void animateView(int timeInMilliSeconds, final RxAnimationRunner animationListener,RxAnimationListener rxAnimationListener) {
+    private static void animateView(int timeInMilliSeconds, final RxAnimationRunner animationListener,final RxAnimationListener rxAnimationListener) {
        final int currentIndex = subscriptions.size();
+        if(rxAnimationListener!=null) {
+            rxAnimationListener.onAnimationStart();
+        }
        subscriptions.add(Observable.interval(timeInMilliSeconds, TimeUnit.MILLISECONDS).subscribeOn(AndroidSchedulers.mainThread()).observeOn(Schedulers.newThread()).subscribe(new Action1<Long>() {
            @Override
            public void call(Long aLong) {
                animationListener.animate();
+               if(rxAnimationListener!=null) {
+                   rxAnimationListener.onAnimationRunning();
+               }
                if(animationListener.checkStopCondition()) {
                    Subscription subscription = subscriptions.get(currentIndex);
                    if(!subscription.isUnsubscribed()) {
                        subscription.unsubscribe();
+                   }
+                   if(rxAnimationListener!=null) {
+                       rxAnimationListener.onAnimationEnd();
                    }
                }
            }
